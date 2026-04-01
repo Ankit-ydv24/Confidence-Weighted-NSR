@@ -159,8 +159,10 @@ algorithm:
   gamma: 1.0
   lam: 1.0
   adv_estimator: gae
-  advantage: positive
-  positive_advantage_weight: 1
+  advantage: weighted # weighted
+  positive_advantage_weight: 0.1
+  confidence_floor: 0.05
+  confidence_beta: 1.0
   kl_penalty: kl  # how to estimate kl divergence
   kl_ctrl:
     type: fixed

@@ -316,50 +316,62 @@ def compute_rewards(token_level_scores, old_log_prob, ref_log_prob, kl_ratio):
     return token_level_scores - kl * kl_ratio
 
 
-def compute_policy_loss(old_log_prob, log_prob, advantages, eos_mask, cliprange, token_level_scores, positive_learning_weight=None):
-    """Adapted from https://github.com/huggingface/trl/blob/main/trl/trainer/ppo_trainer.py#L1122
-
-    Args:
-        old_log_prob: `(torch.Tensor)`
-            shape: (bs, response_length)
-        log_prob: `(torch.Tensor)`
-            shape: (bs, response_length)
-        advantages: `(torch.Tensor)`
-            shape: (bs, response_length)
-        eos_mask: `(torch.Tensor)`
-            shape: (bs, response_length)
-        cliprange: (float)
-            The clip range used in PPO. See https://arxiv.org/abs/1707.06347
-
-    Returns:
-        pg_loss: `a scalar torch.Tensor`
-            policy gradient loss computed via PPO
-        pg_clipfrac: (float)
-            a float number indicating the fraction of policy gradient loss being clipped
-
+def compute_policy_loss(
+    old_log_prob,
+    log_prob,
+    advantages,
+    eos_mask,
+    cliprange,
+    token_level_scores,
+    positive_learning_weight=None,
+):
     """
-    correct_idx = token_level_scores.sum(-1) == 1 
+    Confidence-weighted negative reinforcement:
+    - keep PSR unchanged
+    - weight only incorrect samples by rollout confidence
+    """
+    correct_idx = token_level_scores.sum(-1) == 1
     incorrect_idx = token_level_scores.sum(-1) == 0
+
     negative_approx_kl = log_prob - old_log_prob
     ratio = torch.exp(negative_approx_kl)
     ppo_kl = verl_F.masked_mean(-negative_approx_kl, eos_mask)
 
     pg_losses = -advantages * ratio
     pg_losses2 = -advantages * torch.clamp(ratio, 1.0 - cliprange, 1.0 + cliprange)
+    token_loss = torch.max(pg_losses, pg_losses2)
+
+    # Confidence proxy from the rollout policy.
+    # Higher average log-prob => higher confidence.
+    # This is detached from the current update because it uses old_log_prob.
+    confidence = torch.exp(verl_F.masked_mean(old_log_prob, mask=eos_mask, axis=-1))
+    confidence_floor = 0.05
+    hardness = torch.clamp(confidence, min=confidence_floor, max=1.0)
 
     if positive_learning_weight is not None:
-        assert positive_learning_weight > 0 and positive_learning_weight < 1, f"positive_learning_weight must be in (0, 1). Got {positive_learning_weight}"
-        pos_pg_losses = pg_losses[correct_idx]
-        pos_pg_losses2 = pg_losses2[correct_idx]
-        pos_pg_loss = eos_mask[correct_idx].sum() / eos_mask.sum() * verl_F.masked_mean(torch.max(pos_pg_losses, pos_pg_losses2), eos_mask[correct_idx])
+        assert 0 < positive_learning_weight < 1, (
+            f"positive_learning_weight must be in (0, 1). Got {positive_learning_weight}"
+        )
 
-        neg_pg_losses = pg_losses[incorrect_idx]
-        neg_pg_losses2 = pg_losses2[incorrect_idx]
-        neg_pg_loss = eos_mask[incorrect_idx].sum() / eos_mask.sum() * verl_F.masked_mean(torch.max(neg_pg_losses, neg_pg_losses2), eos_mask[incorrect_idx])
+        pos_pg_losses = token_loss[correct_idx]
+        pos_pg_loss = (
+            eos_mask[correct_idx].sum() / eos_mask.sum()
+            * verl_F.masked_mean(pos_pg_losses, eos_mask[correct_idx])
+        )
+
+        neg_pg_losses = token_loss[incorrect_idx] * hardness[incorrect_idx].unsqueeze(-1)
+        neg_pg_loss = (
+            eos_mask[incorrect_idx].sum() / eos_mask.sum()
+            * verl_F.masked_mean(neg_pg_losses, eos_mask[incorrect_idx])
+        )
 
         pg_loss = positive_learning_weight * pos_pg_loss + neg_pg_loss
     else:
-        pg_loss = verl_F.masked_mean(torch.max(pg_losses, pg_losses2), eos_mask)
+        sample_weight = torch.ones_like(hardness)
+        sample_weight[incorrect_idx] = hardness[incorrect_idx]
+        token_loss = token_loss * sample_weight.unsqueeze(-1)
+        pg_loss = verl_F.masked_mean(token_loss, eos_mask)
+
     pg_clipfrac = verl_F.masked_mean(torch.gt(pg_losses2, pg_losses).float(), eos_mask)
     return pg_loss, pg_clipfrac, ppo_kl
 
