@@ -31,13 +31,13 @@ This keeps the overall RLVR framework unchanged and only modifies how negative r
 Let a generated sequence be $y = (y_1, \dots, y_T)$. We define confidence as the geometric mean token probability:
 
 $$
-\mathrm{conf}(y) = \exp\left(\frac{1}{T}\sum_{t=1}^{T}\log p_\theta\left(y_t \mid x, y_{<t}\right)\right)
+\mathrm{conf}(y) = \exp\left(\frac{1}{T}\sum_{t=1}^{T}\log p_\theta\left(y_t \mid x, y_{1:t-1}\right)\right)
 $$
 
 Where:
 
 - $T$ is sequence length
-- $p_\theta(y_t \mid x, y_{<t})$ is model token probability at step $t$
+- $p_\theta(y_t \mid x, y_{1:t-1})$ is model token probability at step $t$
 
 Interpretation:
 
