@@ -1,0 +1,402 @@
+﻿Folder PATH listing for volume Windows
+Volume serial number is 52EE-C2A7
+C:\CLLG LAB\CLLG SEM -VI\RL LAB\IDEA IMPLEMENT\RLVR-DECOMPOSED
+|   .gitignore
+|   .style.yapf
+|   calculate_metrics.py
+|   eval.py
+|   eval.sh
+|   folder_structure.txt
+|   grader.py
+|   LICENSE
+|   README.md
+|   run_qwen2.5-math-7b_grpo.sh
+|   run_qwen2.5-math-7b_ppo.sh
+|   run_qwen2.5-math-7b_psr_nsr.sh
+|   run_qwen3-4b_grpo.sh
+|   run_qwen3-4b_ppo.sh
+|   run_qwen3-4b_psr_nsr.sh
+|   setup.py
+|   utils.py
+|   
++---data
+|   +---aime2025
+|   |       test.parquet
+|   |       
+|   +---amc23
+|   |       test.parquet
+|   |       
+|   \---math
+|           test.parquet
+|           train.parquet
+|           
++---examples
+|   +---data_preprocess
+|   |       aime_amc_dataset.py
+|   |       full_hh_rlhf.py
+|   |       geo3k.py
+|   |       gsm8k.py
+|   |       hellaswag.py
+|   |       math_dataset.py
+|   |       
+|   +---generation
+|   |       run_deepseek_v2_lite_math.sh
+|   |       
+|   +---grpo_trainer
+|   |       run_deepseek7b_llm.sh
+|   |       run_deepseek7b_llm_seq_balance.sh
+|   |       run_qwen2-7b.sh
+|   |       run_qwen2-7b_seq_balance.sh
+|   |       run_qwen2_5_vl-7b.sh
+|   |       
+|   +---ppo_trainer
+|   |       run_deepseek7b_llm.sh
+|   |       run_deepseek7b_llm_modelscope.sh
+|   |       run_deepseek7b_llm_sp2.sh
+|   |       run_deepseek_full_hh_rlhf.sh
+|   |       run_deepseek_math_gsm8k_megatron.sh
+|   |       run_deepseek_megatron.sh
+|   |       run_gemma.sh
+|   |       run_qwen2-7b_math_gsm8k_megatron.sh
+|   |       run_qwen2-7b_megatron.sh
+|   |       run_qwen2-7b_rm.sh
+|   |       run_qwen2-7b_rm_seq_balance.sh
+|   |       run_qwen2-7b_seq_balance.sh
+|   |       run_qwen2.5-32b.sh
+|   |       verl_getting_started.ipynb
+|   |       
+|   +---ray
+|   |       tutorial.ipynb
+|   |       
+|   +---remax_trainer
+|   |       run_qwen2.5-3b_seq_balance.sh
+|   |       run_qwen2.5-7b_seq_balance.sh
+|   |       
+|   +---rloo_trainer
+|   |       run_qwen2-7b.sh
+|   |       
+|   +---sft
+|   |   \---gsm8k
+|   |           run_deepseek_6b7.sh
+|   |           run_gemma_2b.sh
+|   |           run_gemma_7b.sh
+|   |           run_qwen_05_peft.sh
+|   |           run_qwen_05_sp2.sh
+|   |           run_qwen_05_sp2_liger.sh
+|   |           
+|   +---slurm
+|   |       ray_on_slurm.slurm
+|   |       
+|   \---split_placement
+|       |   main_ppo_split.py
+|       |   README.md
+|       |   run_deepseek7b_llm.sh
+|       |   split_monkey_patch.py
+|       |   
+|       \---config
+|               ppo_trainer_split.yaml
+|               
++---scripts
+|       format.sh
+|       model_merger.py
+|       
+\---verl
+    |   protocol.py
+    |   __init__.py
+    |   
+    +---models
+    |   |   README.md
+    |   |   registry.py
+    |   |   weight_loader_registry.py
+    |   |   __init__.py
+    |   |   
+    |   +---llama
+    |   |   |   __init__.py
+    |   |   |   
+    |   |   \---megatron
+    |   |       |   modeling_llama_megatron.py
+    |   |       |   __init__.py
+    |   |       |   
+    |   |       +---checkpoint_utils
+    |   |       |       llama_loader.py
+    |   |       |       llama_saver.py
+    |   |       |       __init__.py
+    |   |       |       
+    |   |       \---layers
+    |   |               parallel_attention.py
+    |   |               parallel_decoder.py
+    |   |               parallel_linear.py
+    |   |               parallel_mlp.py
+    |   |               parallel_rmsnorm.py
+    |   |               __init__.py
+    |   |               
+    |   +---qwen2
+    |   |   |   __init__.py
+    |   |   |   
+    |   |   \---megatron
+    |   |       |   modeling_qwen2_megatron.py
+    |   |       |   __init__.py
+    |   |       |   
+    |   |       +---checkpoint_utils
+    |   |       |       qwen2_loader.py
+    |   |       |       qwen2_saver.py
+    |   |       |       __init__.py
+    |   |       |       
+    |   |       \---layers
+    |   |               parallel_attention.py
+    |   |               parallel_decoder.py
+    |   |               parallel_linear.py
+    |   |               parallel_mlp.py
+    |   |               parallel_rmsnorm.py
+    |   |               __init__.py
+    |   |               
+    |   \---transformers
+    |           llama.py
+    |           monkey_patch.py
+    |           qwen2.py
+    |           qwen2_vl.py
+    |           __init__.py
+    |           
+    +---single_controller
+    |   |   __init__.py
+    |   |   
+    |   +---base
+    |   |   |   decorator.py
+    |   |   |   worker.py
+    |   |   |   worker_group.py
+    |   |   |   __init__.py
+    |   |   |   
+    |   |   +---megatron
+    |   |   |       worker.py
+    |   |   |       worker_group.py
+    |   |   |       __init__.py
+    |   |   |       
+    |   |   \---register_center
+    |   |           ray.py
+    |   |           __init__.py
+    |   |           
+    |   \---ray
+    |           base.py
+    |           megatron.py
+    |           __init__.py
+    |           
+    +---third_party
+    |   |   __init__.py
+    |   |   
+    |   \---vllm
+    |       |   __init__.py
+    |       |   
+    |       +---vllm_spmd
+    |       |       dtensor_weight_loaders.py
+    |       |       __init__.py
+    |       |       
+    |       +---vllm_v_0_3_1
+    |       |       arg_utils.py
+    |       |       config.py
+    |       |       llm.py
+    |       |       llm_engine_sp.py
+    |       |       model_loader.py
+    |       |       model_runner.py
+    |       |       parallel_state.py
+    |       |       tokenizer.py
+    |       |       weight_loaders.py
+    |       |       worker.py
+    |       |       __init__.py
+    |       |       
+    |       +---vllm_v_0_4_2
+    |       |       arg_utils.py
+    |       |       config.py
+    |       |       dtensor_weight_loaders.py
+    |       |       hf_weight_loader.py
+    |       |       llm.py
+    |       |       llm_engine_sp.py
+    |       |       megatron_weight_loaders.py
+    |       |       model_loader.py
+    |       |       model_runner.py
+    |       |       parallel_state.py
+    |       |       spmd_gpu_executor.py
+    |       |       tokenizer.py
+    |       |       worker.py
+    |       |       __init__.py
+    |       |       
+    |       +---vllm_v_0_5_4
+    |       |       arg_utils.py
+    |       |       config.py
+    |       |       dtensor_weight_loaders.py
+    |       |       hf_weight_loader.py
+    |       |       llm.py
+    |       |       llm_engine_sp.py
+    |       |       megatron_weight_loaders.py
+    |       |       model_loader.py
+    |       |       model_runner.py
+    |       |       parallel_state.py
+    |       |       spmd_gpu_executor.py
+    |       |       tokenizer.py
+    |       |       worker.py
+    |       |       __init__.py
+    |       |       
+    |       \---vllm_v_0_6_3
+    |               arg_utils.py
+    |               config.py
+    |               dtensor_weight_loaders.py
+    |               hf_weight_loader.py
+    |               llm.py
+    |               llm_engine_sp.py
+    |               megatron_weight_loaders.py
+    |               model_loader.py
+    |               model_runner.py
+    |               parallel_state.py
+    |               spmd_gpu_executor.py
+    |               tokenizer.py
+    |               worker.py
+    |               __init__.py
+    |               
+    +---trainer
+    |   |   fsdp_sft_trainer.py
+    |   |   main_eval.py
+    |   |   main_generation.py
+    |   |   main_ppo.py
+    |   |   runtime_env.yaml
+    |   |   __init__.py
+    |   |   
+    |   +---config
+    |   |       evaluation.yaml
+    |   |       generation.yaml
+    |   |       ppo_megatron_trainer.yaml
+    |   |       ppo_trainer.yaml
+    |   |       sft_trainer.yaml
+    |   |       
+    |   \---ppo
+    |           core_algos.py
+    |           ray_trainer.py
+    |           __init__.py
+    |           
+    +---utils
+    |   |   config.py
+    |   |   distributed.py
+    |   |   flops_counter.py
+    |   |   fs.py
+    |   |   fsdp_utils.py
+    |   |   hdfs_io.py
+    |   |   import_utils.py
+    |   |   logging_utils.py
+    |   |   megatron_utils.py
+    |   |   memory_buffer.py
+    |   |   model.py
+    |   |   py_functional.py
+    |   |   ray_utils.py
+    |   |   seqlen_balancing.py
+    |   |   tokenizer.py
+    |   |   torch_dtypes.py
+    |   |   torch_functional.py
+    |   |   tracking.py
+    |   |   ulysses.py
+    |   |   __init__.py
+    |   |   
+    |   +---checkpoint
+    |   |       checkpoint_manager.py
+    |   |       fsdp_checkpoint_manager.py
+    |   |       __init__.py
+    |   |       
+    |   +---dataset
+    |   |       README.md
+    |   |       rl_dataset.py
+    |   |       rm_dataset.py
+    |   |       sft_dataset.py
+    |   |       __init__.py
+    |   |       
+    |   +---debug
+    |   |       performance.py
+    |   |       trajectory_tracker.py
+    |   |       __init__.py
+    |   |       
+    |   +---logger
+    |   |       aggregate_logger.py
+    |   |       __init__.py
+    |   |       
+    |   +---megatron
+    |   |       memory.py
+    |   |       optimizer.py
+    |   |       pipeline_parallel.py
+    |   |       sequence_parallel.py
+    |   |       tensor_parallel.py
+    |   |       __init__.py
+    |   |       
+    |   +---rendezvous
+    |   |       ray_backend.py
+    |   |       __init__.py
+    |   |       
+    |   \---reward_score
+    |       |   geo3k.py
+    |       |   grader.py
+    |       |   gsm8k.py
+    |       |   math.py
+    |       |   utils.py
+    |       |   __init__.py
+    |       |   
+    |       +---prime_code
+    |       |       testing_util.py
+    |       |       utils.py
+    |       |       __init__.py
+    |       |       
+    |       \---prime_math
+    |               grader.py
+    |               math_normalize.py
+    |               __init__.py
+    |               
+    +---version
+    |       version
+    |       
+    \---workers
+        |   fsdp_workers.py
+        |   megatron_workers.py
+        |   __init__.py
+        |   
+        +---actor
+        |       base.py
+        |       dp_actor.py
+        |       megatron_actor.py
+        |       __init__.py
+        |       
+        +---critic
+        |       base.py
+        |       dp_critic.py
+        |       megatron_critic.py
+        |       __init__.py
+        |       
+        +---reward_manager
+        |       naive.py
+        |       prime.py
+        |       __init__.py
+        |       
+        +---reward_model
+        |   |   base.py
+        |   |   __init__.py
+        |   |   
+        |   \---megatron
+        |           reward_model.py
+        |           __init__.py
+        |           
+        +---rollout
+        |   |   base.py
+        |   |   hf_rollout.py
+        |   |   tokenizer.py
+        |   |   __init__.py
+        |   |   
+        |   +---naive
+        |   |       naive_rollout.py
+        |   |       __init__.py
+        |   |       
+        |   \---vllm_rollout
+        |           fire_vllm_rollout.py
+        |           vllm_rollout.py
+        |           vllm_rollout_spmd.py
+        |           __init__.py
+        |           
+        \---sharding_manager
+                base.py
+                fsdp_ulysses.py
+                fsdp_vllm.py
+                megatron_vllm.py
+                __init__.py
+                
